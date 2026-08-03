@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/bottom_sheet.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,22 +43,7 @@ class _HomeState extends State<Home> {
         },
       ),
       bottomSheet: showBottomSheet ? 
-        BottomSheet(
-          constraints: BoxConstraints(maxHeight: 100),
-          backgroundColor: Colors.amber,
-          onClosing: (){}, builder: (context) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: (){}, 
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(), 
-                  padding: const EdgeInsets.all(24)),
-                child: Icon(Icons.check))
-            ],
-            );
-      }) : null,
+       MainBotomSheet() : null,
     );
   }
 }
