@@ -15,8 +15,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.workout.title),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
       ),
       bottomSheet: MainBotomSheet()
     );

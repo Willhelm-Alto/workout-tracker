@@ -3,14 +3,14 @@ import 'package:gym_tracker/workout.dart';
 import 'package:gym_tracker/workout_page.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+class RoutinePage extends StatefulWidget {
+  const RoutinePage({super.key});
 
   @override
-  MainPageState createState() => MainPageState();
+  RoutinePageState createState() => RoutinePageState();
 }
 
-class MainPageState extends State<MainPage> {
+class RoutinePageState extends State<RoutinePage> {
   final DateTime _today = DateUtils.dateOnly(DateTime.now());
   late DateTime _selectedDay = _today;
 
@@ -26,9 +26,8 @@ class MainPageState extends State<MainPage> {
     ),
   };
 
-  Workout? _workoutForDay(DateTime day) => _events[DateUtils.dateOnly(day)];
-  Widget _buildWorkoutOfDay() {
-    final workout = _workoutForDay(_selectedDay);
+  Widget _buildWorkoutOfDay(DateTime day) {
+    final workout = _events[DateUtils.dateOnly(day)];
     if (workout == null) {
       return const Center(child: Text("Nenhum treino neste dia"));
     }

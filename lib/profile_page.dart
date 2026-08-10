@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/add_workout.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -67,35 +68,6 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         }
       },
-    );
-  }
-}
-
-
-class AddWorkoutForm extends StatefulWidget {
-  const AddWorkoutForm({super.key});
-
-  @override
-  AddWorkoutFormState createState() => AddWorkoutFormState();
-}
-
-class AddWorkoutFormState extends State<AddWorkoutForm> {
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-
-        ],
-      )
     );
   }
 }
