@@ -35,7 +35,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[600],
-        title: Text("Your Workout"),
+        title: Text("Seu Treino"),
         centerTitle: true,
         foregroundColor: Colors.white,
       ),

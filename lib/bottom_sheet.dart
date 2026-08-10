@@ -15,9 +15,41 @@ class _MainBotomSheetState extends State<MainBotomSheet> {
   Timer? _timer;
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _toggleTimer() {
+    if (_isTimer) {
+      _timer?.cancel();
+      setState(() {
+        _timer = null;
+        _isTimer = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isTimer = true;
+      _secondsLeft = 10;
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        setState(() {
+          _secondsLeft--;
+          if (_secondsLeft == 0) {
+            timer.cancel();
+            _timer = null;
+            _isTimer = false;
+          }
+        });
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BottomSheet(
-      constraints: BoxConstraints(maxHeight: 100),
+      constraints: const BoxConstraints(maxHeight: 100),
       backgroundColor: Colors.blue,
       onClosing: () {},
       builder: (context) {
@@ -33,27 +65,7 @@ class _MainBotomSheetState extends State<MainBotomSheet> {
               child: Icon(Icons.arrow_left),
             ),
             ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _isTimer = !_isTimer;
-                  if (_isTimer) {
-                    _secondsLeft = 10;
-                    _timer = Timer.periodic(const Duration(seconds: 1), (
-                      timer,
-                    ) {
-                      if (_secondsLeft > 0) {
-                        setState(() {
-                          _secondsLeft--;
-                        });
-                      } else {
-                        _timer?.cancel();
-                        _isTimer = false;
-                        setState(() {});
-                      }
-                    });
-                  }
-                });
-              },
+              onPressed: _toggleTimer,
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
                 padding: const EdgeInsets.all(24),
