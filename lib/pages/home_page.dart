@@ -1,37 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/pages/workout_page.dart';
 import 'package:gym_tracker/workout.dart';
-import 'package:gym_tracker/workout_page.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class RoutinePage extends StatefulWidget {
-  const RoutinePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  RoutinePageState createState() => RoutinePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class RoutinePageState extends State<RoutinePage> {
+class HomePageState extends State<HomePage> {
   final DateTime _today = DateUtils.dateOnly(DateTime.now());
   late DateTime _selectedDay = _today;
-
-  late final Map<DateTime, Workout> _events = {
-    getFirstDayOfWeek(_today): Workout(title: 'Peito', exercises: []),
-    getFirstDayOfWeek(_today).add(const Duration(days: 2)): Workout(
-      title: 'Costas',
-      exercises: [],
-    ),
-    getFirstDayOfWeek(_today).add(const Duration(days: 4)): Workout(
-      title: "Perna",
-      exercises: [],
-    ),
-  };
+  WorkoutManager manager = WorkoutManager();
 
   Widget _buildWorkoutOfDay(DateTime day) {
-    final workout = _events[DateUtils.dateOnly(day)];
+    final workout = _workoutForDay(day);
     if (workout == null) {
       return const Center(child: Text("Nenhum treino neste dia"));
     }
     return ListView(children: [ListTile(title: Text(workout.title))]);
+  }
+
+  Workout? _workoutForDay(DateTime day) {
+    final dayOfWeek = DayOfWeek.values[day.weekday - 1];
+    for (final workout in manager.workouts) {
+      if (workout.day == dayOfWeek) return workout;
+    }
+    return null;
   }
 
   @override
@@ -71,7 +68,7 @@ class RoutinePageState extends State<RoutinePage> {
           ),
         ),
         const Divider(height: 1),
-        Expanded(child: _buildWorkoutOfDay()),
+        Expanded(child: _buildWorkoutOfDay(_selectedDay)),
         SizedBox(
           width: double.infinity,
           height: 56,

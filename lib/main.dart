@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gym_tracker/routine_page.dart';
-import 'package:gym_tracker/profile_page.dart';
+import 'package:gym_tracker/pages/home_page.dart';
+import 'package:gym_tracker/pages/workout_manager_page.dart';
+import 'package:gym_tracker/workout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,8 +33,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  static const List<Widget> _pages = [RoutinePage(), ProfilePage()];
+  static const List<Widget> _pages = [HomePage(), WorkoutManagerPage()];
   int _pageIndex = 0;
+  WorkoutManager manager = WorkoutManager(); 
+
+  @override
+  void initState() { 
+    super.initState();
+    manager.load(); 
+  }
 
   @override
   Widget build(BuildContext context) {
