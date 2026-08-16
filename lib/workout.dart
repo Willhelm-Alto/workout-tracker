@@ -1,23 +1,26 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
 
-enum DayOfWeek { segunda, terca, quarta, quinta, sexta, sabado, domingo }
+enum DayOfWeek { segunda, terca, quarta, quinta, sexta, sabado, domingo}
 
 class Workout {
-  final String title;
+  String id;
+  String title;
   List<Exercise> exercises;
   DayOfWeek day;
 
-  Workout({required this.title, required this.exercises, required this.day});
+  Workout({required this.id, required this.title, required this.exercises, required this.day});
 
   Workout.fromJson(Map<String, dynamic> data)
-    : title = data["title"],
+    : id = data["id"],
+      title = data["title"],
       exercises = data["exercises"],
       day = data["day"];
 
   Map<String, dynamic> toJson() {
     return {
+      "id": id,
       "title": title,
       "exercises": exercises.map((e) => e.toJson()).toList(),
       "day": day.name,
@@ -30,19 +33,22 @@ class Exercise {
   int repetitions;
   int set;
   int restTime;
+  int? weight;
 
   Exercise({
     required this.title,
     this.repetitions = 12,
     this.set = 3,
     this.restTime = 30,
+    this.weight
   });
 
   Exercise.fromJson(Map<String, dynamic> data)
     : title = data["title"],
       repetitions = data["repetitions"],
       set = data["set"],
-      restTime = data["restTime"];
+      restTime = data["restTime"],
+      weight = data["weight"];
 
   Map<String, dynamic> toJson() {
     return {
@@ -50,6 +56,7 @@ class Exercise {
       "repetitions": repetitions,
       "set": set,
       "restTime": restTime,
+      "weight": weight
     };
   }
 }
@@ -71,12 +78,20 @@ class WorkoutManager {
   Future<void> load() async {
     Directory appDir = await getApplicationDocumentsDirectory();
     File workoutFile = File("${appDir.path}/workout.json");
+    print("APP DIR: ${appDir.path}");
+
     if (workoutFile.existsSync()) {
-      print("existe");
+      String contents = workoutFile.readAsStringSync().trim();
+      List<dynamic> data = jsonDecode(contents);
+      print(data);
     } else {
-      print("NÃO EXISTE");
+      workoutFile.writeAsStringSync("[]");
     }
   }
 
-  void saveWorkout() {}
+  Future<void> saveWorkout() async {
+    // Directory appDir = await getApplicationDocumentsDirectory();
+    // File workoutFile = File("${appDir.path}/workout.json");
+    
+  }
 }

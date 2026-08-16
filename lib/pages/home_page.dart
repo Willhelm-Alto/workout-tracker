@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gym_tracker/pages/workout_page.dart';
+import 'package:gym_tracker/pages/workout_tracker_page.dart';
 import 'package:gym_tracker/workout.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -78,7 +78,7 @@ class HomePageState extends State<HomePage> {
                 : () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => WorkoutPage(workout: workout),
+                      builder: (_) => TrackerPage(workout: workout),
                     ),
                   ),
             style: TextButton.styleFrom(
