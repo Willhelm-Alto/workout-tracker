@@ -97,6 +97,7 @@ class WorkoutManager {
   Future<void> writeWorkoutFile() async {
     Directory appDir = await getApplicationDocumentsDirectory();
     File workoutFile = File("${appDir.path}/workout.json");
+    
     _workouts.forEach((workout) {
       String workoutString = jsonEncode(workout.toJson());
       print(workoutString);

@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.red)
           ),
+          hintStyle: TextStyle(color: Colors.grey),
         ),
       ),
       title: 'Workout Tracker',

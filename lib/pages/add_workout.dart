@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/widgets/new_exercise.dart';
 import 'package:gym_tracker/workout.dart';
+import 'package:uuid/uuid.dart';
 
 class AddWorkoutForm extends StatefulWidget {
   const AddWorkoutForm({super.key});
@@ -9,7 +11,7 @@ class AddWorkoutForm extends StatefulWidget {
 }
 
 class AddWorkoutFormState extends State<AddWorkoutForm> {
-  // final WorkoutManager _manager = WorkoutManager();
+  final WorkoutManager _manager = WorkoutManager();
 
   final _formKey = GlobalKey<FormState>();
   final _workoutNameController = TextEditingController();
@@ -104,6 +106,30 @@ class AddWorkoutFormState extends State<AddWorkoutForm> {
                 onDelete: () => setState(() {
                   exercises.remove(e);
                 }),
+                nameValidator: (value) {
+                  if (value == null || value == "") {
+                    return "Preencha o nome do exercício";
+                  }
+                  return null;
+                },
+                setValidator: (value) {
+                  if (value == null || value == "") {
+                    return "Campo vazio";
+                  }
+                  return null;
+                },
+                repValidator: (value) {
+                  if (value == null || value == "") {
+                    return "Campo vazio";
+                  }
+                  return null;
+                },
+                restValidator:(value) {
+                  if (value == null || value == "") {
+                    return "Campo vazio";
+                  }
+                  return null;
+                },
               ),
             ),
             AddExercise(
@@ -117,7 +143,14 @@ class AddWorkoutFormState extends State<AddWorkoutForm> {
           height: 56,
           child: TextButton(
             onPressed: () {
-              if (_formKey.currentState!.validate()) {}
+              if (_formKey.currentState!.validate()) {
+                var workout = Workout(
+                    id: Uuid().v4(), 
+                    title: _workoutNameController.text, 
+                    exercises: exercises, 
+                    day: _selectedDayOfWeek);
+                _manager.saveWorkout(workout);
+              }
             },
             style: TextButton.styleFrom(
               backgroundColor: Colors.blue,
@@ -138,95 +171,6 @@ class AddWorkoutFormState extends State<AddWorkoutForm> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class NewExercise extends StatefulWidget {
-  const NewExercise({
-    required this.onDelete,
-    required this.exercise,
-    super.key,
-  });
-  final Function onDelete;
-  final Exercise exercise;
-
-  @override
-  State<NewExercise> createState() => _NewExerciseState();
-}
-
-class _NewExerciseState extends State<NewExercise> {
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(bottom: 12),
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadiusGeometry.circular(12),
-        side: BorderSide(color: Colors.grey.shade300),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            TextFormField(
-              style: TextStyle(fontWeight: FontWeight.w500),
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                label: Text(
-                  "Nome do Exercício",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 8),
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      hintText: "Set",
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      hintText: "Rep",
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                      hintText: "Rest",
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                IconButton(
-                  color: Colors.red,
-                  onPressed: () => widget.onDelete(),
-                  icon: Icon(Icons.delete),
-                ),
-              ],
-            ),
-          ],
         ),
       ),
     );
