@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
-enum DayOfWeek { segunda, terca, quarta, quinta, sexta, sabado, domingo}
+enum DayOfWeek { segunda, terca, quarta, quinta, sexta, sabado, domingo }
 
 class Workout {
   String id;
@@ -10,7 +10,12 @@ class Workout {
   List<Exercise> exercises;
   DayOfWeek day;
 
-  Workout({required this.id, required this.title, required this.exercises, required this.day});
+  Workout({
+    required this.id,
+    required this.title,
+    required this.exercises,
+    required this.day,
+  });
 
   Workout.fromJson(Map<String, dynamic> data)
     : id = data["id"],
@@ -40,7 +45,7 @@ class Exercise {
     this.repetitions = 12,
     this.set = 3,
     this.restTime = 30,
-    this.weight
+    this.weight,
   });
 
   Exercise.fromJson(Map<String, dynamic> data)
@@ -56,7 +61,7 @@ class Exercise {
       "repetitions": repetitions,
       "set": set,
       "restTime": restTime,
-      "weight": weight
+      "weight": weight,
     };
   }
 }
@@ -78,20 +83,28 @@ class WorkoutManager {
   Future<void> load() async {
     Directory appDir = await getApplicationDocumentsDirectory();
     File workoutFile = File("${appDir.path}/workout.json");
-    print("APP DIR: ${appDir.path}");
 
     if (workoutFile.existsSync()) {
       String contents = workoutFile.readAsStringSync().trim();
-      List<dynamic> data = jsonDecode(contents);
-      print(data);
+      if(contents != ""){
+        List<dynamic> data = jsonDecode(contents);
+      }
     } else {
       workoutFile.writeAsStringSync("[]");
     }
   }
 
-  Future<void> saveWorkout() async {
-    // Directory appDir = await getApplicationDocumentsDirectory();
-    // File workoutFile = File("${appDir.path}/workout.json");
-    
+  Future<void> writeWorkoutFile() async {
+    Directory appDir = await getApplicationDocumentsDirectory();
+    File workoutFile = File("${appDir.path}/workout.json");
+    _workouts.forEach((workout) {
+      String workoutString = jsonEncode(workout.toJson());
+      print(workoutString);
+    });
+  }
+
+  void saveWorkout(Workout workout) {
+    _workouts.add(workout);
+    writeWorkoutFile();
   }
 }
