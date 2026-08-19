@@ -124,7 +124,7 @@ class AddWorkoutFormState extends State<AddWorkoutForm> {
                   }
                   return null;
                 },
-                restValidator:(value) {
+                restValidator: (value) {
                   if (value == null || value == "") {
                     return "Campo vazio";
                   }
@@ -145,11 +145,19 @@ class AddWorkoutFormState extends State<AddWorkoutForm> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 var workout = Workout(
-                    id: Uuid().v4(), 
-                    title: _workoutNameController.text, 
-                    exercises: exercises, 
-                    day: _selectedDayOfWeek);
-                _manager.saveWorkout(workout);
+                  id: Uuid().v4(),
+                  title: _workoutNameController.text,
+                  exercises: exercises,
+                  day: _selectedDayOfWeek,
+                );
+                if (_manager.checkValid(workout)) {
+                  _manager.saveWorkout(workout);
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("aaaa"))
+                  );
+                }
               }
             },
             style: TextButton.styleFrom(

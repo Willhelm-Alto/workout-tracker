@@ -20,8 +20,10 @@ class Workout {
   Workout.fromJson(Map<String, dynamic> data)
     : id = data["id"],
       title = data["title"],
-      exercises = data["exercises"],
-      day = data["day"];
+      exercises = (data["exercises"] as List)
+          .map((e) => Exercise.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      day = DayOfWeek.values.byName(data["day"]);
 
   Map<String, dynamic> toJson() {
     return {
@@ -68,7 +70,7 @@ class Exercise {
 
 class WorkoutManager {
   static WorkoutManager? _instance; //instância da própria classe
-  final List<Workout> _workouts = [];
+  List<Workout> _workouts = [];
 
   WorkoutManager._(); //construtor com nome "_"
 
@@ -79,6 +81,9 @@ class WorkoutManager {
   }
 
   List<Workout> get workouts => _workouts;
+  void clearWorkouts() {
+    _workouts = [];
+  }
 
   Future<void> load() async {
     Directory appDir = await getApplicationDocumentsDirectory();
@@ -86,26 +91,39 @@ class WorkoutManager {
 
     if (workoutFile.existsSync()) {
       String contents = workoutFile.readAsStringSync().trim();
-      if(contents != ""){
+      if (contents != "") {
         List<dynamic> data = jsonDecode(contents);
+        for (var element in data) {
+          var w = element as Map<String, dynamic>;
+          _workouts.add(Workout.fromJson(w));
+        }
       }
     } else {
-      workoutFile.writeAsStringSync("[]");
+      workoutFile.writeAsStringSync(jsonEncode(""));
     }
   }
 
   Future<void> writeWorkoutFile() async {
     Directory appDir = await getApplicationDocumentsDirectory();
-    File workoutFile = File("${appDir.path}/workout.json");
-    
-    _workouts.forEach((workout) {
-      String workoutString = jsonEncode(workout.toJson());
-      print(workoutString);
-    });
+    File file = File("${appDir.path}/workout.json");
+
+    file.writeAsStringSync(
+      jsonEncode(_workouts.map((e) => e.toJson()).toList()),
+    );
   }
 
   void saveWorkout(Workout workout) {
     _workouts.add(workout);
     writeWorkoutFile();
+  }
+
+  bool checkValid(Workout w) {
+    bool res = true;
+    for (var e in workouts) {
+      if (e.day == w.day) {
+        res = false;
+      }
+    }
+    return res;
   }
 }

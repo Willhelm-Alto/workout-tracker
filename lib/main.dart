@@ -28,10 +28,10 @@ class MyApp extends StatelessWidget {
             borderSide: BorderSide(color: Colors.blue),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red)
+            borderSide: BorderSide(color: Colors.red),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red)
+            borderSide: BorderSide(color: Colors.red),
           ),
           hintStyle: TextStyle(color: Colors.grey),
         ),
@@ -71,7 +71,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             onPressed: () async {
               Directory appDir = await getApplicationDocumentsDirectory();
               File file = File("${appDir.path}/workout.json");
-              file.delete();
+              setState(() {
+                file.delete();
+                manager.clearWorkouts();
+              });
             },
             icon: Icon(Icons.delete),
           ),

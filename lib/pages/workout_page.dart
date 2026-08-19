@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/pages/add_workout.dart';
+import 'package:gym_tracker/workout.dart';
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({super.key});
@@ -9,6 +10,34 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
+  final manager = WorkoutManager();
+
+  @override
+  Widget build(BuildContext context) {
+    if (manager.workouts.isEmpty) {
+      return EmptyWorkout();
+    }
+    return ListView(
+      children: [
+        ...manager.workouts.map(
+          (e) => Card(child: Row(children: [Text(e.title)])),
+        ),
+        IconButton(
+          style: IconButton.styleFrom(side: BorderSide(color: Colors.grey)),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddWorkoutForm()),
+          ),
+          icon: Icon(Icons.add, color: Colors.grey),
+        ),
+      ],
+    );
+  }
+}
+
+class EmptyWorkout extends StatelessWidget {
+  const EmptyWorkout({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Center(
